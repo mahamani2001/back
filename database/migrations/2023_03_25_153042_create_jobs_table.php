@@ -13,18 +13,19 @@ class CreateJobsTable extends Migration
      */
     public function up()
     {  if (!Schema::hasTable('jobs')) {
-        Schema::create('jobs', function (Blueprint $table) {
-            $table->id();
-            $table->string('title');
-            $table->text('description');
-            $table->decimal('price_max');
-            $table-> decimal('price_min');
-            $table->boolean('availability')->default(true);
-            $table->string('pictureUrl');
-            $table->timestamps();
-            
-        });
-    }
+            Schema::create('jobs', function (Blueprint $table) {
+                $table->id();
+                $table->string('title');
+                $table->text('description');
+                $table->decimal('price_max');
+                $table-> decimal('price_min');
+                $table->boolean('availability')->default(true);
+                $table->string('pictureUrl');
+               $table->unsignedBigInteger('category_id')->nullable(); // add new foreign key column
+                $table->foreign('category_id')->references('id')->on('categories');
+                $table->timestamps();    
+            });
+        }
     }
 
     /**

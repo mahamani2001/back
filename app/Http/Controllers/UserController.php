@@ -82,10 +82,20 @@ class UserController extends Controller
             'access_token'=>$token,
             'role'=>auth()->user()->role,
             'token_type'=>'Bearer',
-            'expires_in'=>auth()->factory()->getTTL()*60
-        ]);
+            'expires_in'=>auth()->factory()->getTTL()*60,
+            'user' =>auth()->user(),
+            'token' => $token,
+            
+           
+        ])
+        ->header('Access-Control-Allow-Origin', '*')
+        ->header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS')
+        ->header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+        ;
             
     }
+    
+    
     //logout Api method
     public function logout(){
         try{

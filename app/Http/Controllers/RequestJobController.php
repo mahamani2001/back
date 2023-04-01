@@ -17,7 +17,7 @@ class RequestJobController extends Controller
         $requestjob=RequestJob::create($request->all());
         return response()->json($requestjob,202);
     }
-
+   
     // updateRequest
     public function updaterquestjob(Request $request,$id){
         $requestjob=RequestJob::find($id);

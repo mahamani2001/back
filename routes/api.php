@@ -1,6 +1,7 @@
 <?php
 
 
+use App\Http\Controllers\DisponibiliteContoller;
 use App\Http\Controllers\JobberController;
 use App\Http\Controllers\RequestJobController;
 use App\Http\Controllers\UserController;
@@ -67,6 +68,12 @@ Route::put('prestataires/{id}', [JobberController::class,'update']);
 // delete a Prestataire
 Route::delete('prestataires/{id}', [JobberController::class,'destroy']);
 
+
+Route::get('disponibilites',  [DisponibiliteContoller::class,'index']);
+Route::post('disponibilites', [DisponibiliteContoller::class,'store']);
+Route::get('disponibilites/{id}',[DisponibiliteContoller::class,'show']);
+Route::put('disponibilites/{id}', [DisponibiliteContoller::class,'update']);
+Route::delete('disponibilites/{id}', [DisponibiliteContoller::class,'destroy']);
 
 
 //Tache admin
