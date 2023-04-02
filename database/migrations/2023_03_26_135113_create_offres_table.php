@@ -21,7 +21,7 @@ class CreateOffresTable extends Migration
             $table->enum('statut', ['accepte', 'refuse', 'en_attente']);
             $table->timestamps();
             $table->foreign('user_id')->references('id')->on('users');
-            $table->foreign('demande_service_id')->references('id')->on('demandes_service');
+            $table->foreign('demande_service_id')->references('id')->on('request_jobs');
         });
     }
 

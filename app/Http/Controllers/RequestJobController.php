@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Offre;
 use App\Models\RequestJob;
 use Illuminate\Http\Request;
 
@@ -42,4 +43,5 @@ function search($title){
   //return Product::where("title",$title)->get();//hadhia haja précise
   return RequestJob::where("title","like","%".$title."%")->get();
 }
+
 }

@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Job;
+use App\Models\Offre;
+use App\Models\RequestJob;
 use Illuminate\Http\Request;
 
 class JobController extends Controller
@@ -56,5 +58,7 @@ class JobController extends Controller
             $job->delete();
             return response()->json(null, 204);
         }
+
+  
 
 }

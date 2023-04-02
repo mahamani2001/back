@@ -3,6 +3,7 @@
 
 use App\Http\Controllers\DisponibiliteContoller;
 use App\Http\Controllers\JobberController;
+use App\Http\Controllers\JobOfferController;
 use App\Http\Controllers\RequestJobController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
@@ -42,12 +43,6 @@ Route::group(['middleware'=>'api'],function($routes){
 });
 
 
-//job_request api 
-Route::get('job-request',[RequestJobController::class,'getRequestJob']);
-Route::post('job-requests', [RequestJobController::class, 'addrequestjob']);
-Route::put('job-requests/{id}',[RequestJobController::class,'updaterquestjob']);
-Route::delete('job-requests/{id}',[RequestJobController::class,'deleteRequestJob']);
-Route::get('search/{title}',[RequestJobController::class,'search']);
 
 /*gérer les avis*/
 
@@ -76,6 +71,22 @@ Route::put('disponibilites/{id}', [DisponibiliteContoller::class,'update']);
 Route::delete('disponibilites/{id}', [DisponibiliteContoller::class,'destroy']);
 
 
+
+Route::group(['middleware' => ['jwt.verify']], function () {
+    //job_request api 
+Route::get('job-request',[RequestJobController::class,'getRequestJob']);
+Route::post('job-requests', [RequestJobController::class, 'addrequestjob']);
+Route::put('job-requests/{id}',[RequestJobController::class,'updaterquestjob']);
+Route::delete('job-requests/{id}',[RequestJobController::class,'deleteRequestJob']);
+Route::get('search/{title}',[RequestJobController::class,'search']);
+Route::post('requests/{id}/offers', [JobOfferController::class, 'create']);
+// Endpoints pour les offres de prix avec middleware d'authentification JWT
+/*Route::group(['prefix' => 'job-requests/{jobRequestId}'], function () {
+    Route::post('/job-offers', [JobOfferController::class, 'store']);
+    Route::put('/job-offers/{id}', [JobOfferController::class, 'update']);
+    Route::delete('/job-offers/{id}', [JobOfferController::class, 'destroy']);
+});*/
+});
 //Tache admin
 //Gérer services:
 Route::get('/job', [JobController::class, 'index']);
