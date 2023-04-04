@@ -19,19 +19,26 @@ class CreateRequestJobsTable extends Migration
             $table->unsignedBigInteger('job_id')->nullable();
             $table->unsignedBigInteger('category_id');
             $table->string('title');
-            $table->text('description')->nullable();;
+            $table->text('description')->nullable();
             $table->dateTime('start_date');
             $table->dateTime('end_date');
             $table->string('location');
             $table->string('time');
             $table->enum('status', ['pending', 'completed', 'canceled'])->default('pending');
+            $table->boolean('is_client')->default(true);
+            $table->boolean('is_provider')->default(false);
             $table->timestamps();
-           $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+        
+            // Define foreign key constraints
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('job_id')->references('id')->on('jobs')->onDelete('cascade');
             $table->foreign('category_id')->references('id')->on('categories')->onDelete('cascade');
-
-
         });
+        
+        
+        
+        
+        
     }
 
     /**

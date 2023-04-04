@@ -128,43 +128,45 @@ class UserController extends Controller
 }
  //Profile update and check user is authanticated or not
  public function updateProfile(Request $request)
- {
-     // Vérifier si l'utilisateur est authentifié
-     if (auth()->check()) {
-         $validator = Validator::make($request->all(), [
-             'email' => 'required|string|email',
-             'firstname' => 'required|string',
-             'lastname' => 'required|string|min:2|max:100',
-             'password' => 'required|string',
-             'address' => 'required|string',
-             'phone' => 'required|string',
-         ]);
- 
-         if ($validator->fails()) {
-             return response()->json($validator->errors());
-         }
- 
-         $user = auth()->user();
-         $user->email = $request->email;
-         $user->firstname = $request->firstname;
-         $user->lastname = $request->lastname;
-         $user->password = Hash::make($request->password);
-         $user->address = $request->address;
-         $user->phone = $request->phone;
-         $user->save();
- 
-         return response()->json([
-             'success' => true,
-             'message' => 'Profil mis à jour avec succès',
-             'user' => $user
-         ], 200);
-     } else {
-         return response()->json([
-             'success' => false,
-             'message' => 'Utilisateur non authentifié'
-         ], 401);
-     }
- }
+{
+    // Vérifier si l'utilisateur est authentifié
+    if (auth()->check()) {
+        $validator = Validator::make($request->all(), [
+            'email' => 'required|string|email',
+            'firstname' => 'required|string',
+            'lastname' => 'required|string|min:2|max:100',
+            'password' => 'nullable|string|min:6',
+            'address' => 'required|string',
+            'phone' => 'required|string',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 400);
+        }
+
+        $user = auth()->user();
+        $user->email = $request->email;
+        $user->firstname = $request->firstname;
+        $user->lastname = $request->lastname;
+        if ($request->filled('password')) {
+            $user->password = Hash::make($request->password);
+        }
+        $user->address = $request->address;
+        $user->phone = $request->phone;
+        $user->save();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Profil mis à jour avec succès',
+            'user' => $user
+        ], 200);
+    } else {
+        return response()->json([
+            'success' => false,
+            'message' => 'Utilisateur non authentifié'
+        ], 401);
+    }
+}
  /*
  //Ce code vérifie si l'utilisateur est authentifié en utilisant auth()->user(). 
  Si l'utilisateur n'est pas authentifié, il renvoie une réponse JSON avec un message d'erreur.

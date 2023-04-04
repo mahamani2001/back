@@ -11,11 +11,11 @@ use Tymon\JWTAuth\Exceptions\JWTException;
 
 class JobOfferController extends Controller
 {
-    public function __construct()
+  /*  public function __construct()
     {
         $this->middleware('auth:api');
     }
-
+*/
     public function create(Request $request, $id)
     {
         $validator = Validator::make($request->all(), [
@@ -28,7 +28,7 @@ class JobOfferController extends Controller
         }
 
         $offre = new Offre();
-        $offre->user_id = Auth::id();
+        $offre->user_id = $id;//Auth::id()
         $offre->demande_service_id = $id;
         $offre->prix = $request->prix;
         $offre->statut = $request->response;

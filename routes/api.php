@@ -14,7 +14,6 @@ use App\Http\Controllers\CategoriesController;
 
 
 
-
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -36,16 +35,13 @@ Route::group(['middleware'=>'api'],function($routes){
     Route::post('/login',[UserController::class,'login']);
     Route::get('/logout',[UserController::class,'logout']);
     Route::get('/profile',[UserController::class,'profile']);
-    Route::post('/profile-update',[UserController::class,'updateProfile']);
+    Route::put('/profile-update',[UserController::class,'updateProfile']);
    // Route::get('/send-verify-mail//{email}',[UserController::class,'sendVerifyMail']);
     Route::get('/refresh-token',[UserController::class,'refreshToken']);   
 
 });
 
-
-
 /*gérer les avis*/
-
 Route::post('avis',[ReviewController::class,'addavis']);
 Route::put('avis/{id}',[ReviewController::class,'updateavis']);
 Route::delete('avis/{id}',[ReviewController::class,'deleteavis']);
@@ -72,21 +68,27 @@ Route::delete('disponibilites/{id}', [DisponibiliteContoller::class,'destroy']);
 
 
 
-Route::group(['middleware' => ['jwt.verify']], function () {
+//Route::group(['middleware' => ['jwt.verify']], function () {
     //job_request api 
+
+// Endpoints pour les offres de prix avec middleware d'authentification JWT
+/*Route::group(['prefix' => 'job-requests/{jobRequestId}'], function () {
+    Route::post('/job-offers', [JobOfferController::class, 'store']);
+    Route::put('/job-offers/{id}', [JobOfferController::class, 'update']);
+    Route::delete('/job-offers/{id}', [JobOfferController::class, 'destroy']);
+}.);*/
+//})
 Route::get('job-request',[RequestJobController::class,'getRequestJob']);
 Route::post('job-requests', [RequestJobController::class, 'addrequestjob']);
 Route::put('job-requests/{id}',[RequestJobController::class,'updaterquestjob']);
 Route::delete('job-requests/{id}',[RequestJobController::class,'deleteRequestJob']);
 Route::get('search/{title}',[RequestJobController::class,'search']);
 Route::post('requests/{id}/offers', [JobOfferController::class, 'create']);
-// Endpoints pour les offres de prix avec middleware d'authentification JWT
-/*Route::group(['prefix' => 'job-requests/{jobRequestId}'], function () {
-    Route::post('/job-offers', [JobOfferController::class, 'store']);
-    Route::put('/job-offers/{id}', [JobOfferController::class, 'update']);
-    Route::delete('/job-offers/{id}', [JobOfferController::class, 'destroy']);
-});*/
-});
+//Route::get('/job-request', [RequestJobController::class, 'index']);
+Route::post('/post-requests-to-provider', [RequestJobController::class, 'postRequestsToProvider']);
+Route::get('/client-requests', [RequestJobController::class, 'getClientRequests']);
+Route::get('/providerRequest', [RequestJobController::class, 'getProviderRequests']);
+
 //Tache admin
 //Gérer services:
 Route::get('/job', [JobController::class, 'index']);
@@ -94,6 +96,7 @@ Route::get('/job/{job}', [JobController::class, 'show']);
 Route::post('/job', [JobController::class, 'store']);
 Route::put('/job/{job}', [JobController::class, 'update']);
 Route::delete('/job/{job}', [JobController::class, 'destroy']);
+
 
 //get service avec catégorie
 Route::get('jobs/{id}', [JobController::class, 'get']);
@@ -103,7 +106,6 @@ Route::get('/categories/{id}', [CategoriesController::class, 'show']);
 Route::post('/categories', [CategoriesController::class, 'store']);
 Route::put('/categories/{id}', [CategoriesController::class, 'update']);
 Route::delete('/categories/{id}', [CategoriesController::class, 'destroy']);
-
 
 
 
