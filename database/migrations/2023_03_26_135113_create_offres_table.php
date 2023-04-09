@@ -17,7 +17,7 @@ class CreateOffresTable extends Migration
             $table->id();
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('demande_service_id');
-            $table->decimal('prix', 10, 2);
+            $table->decimal('prix', 10, 2)->nullable(); // Modify the column to allow null values;
             $table->enum('statut', ['accepte', 'refuse', 'en_attente']);
             $table->timestamps();
         
