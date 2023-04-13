@@ -110,5 +110,8 @@ public function jobs()
     {
         return $this->hasMany(Disponibilite::class);
     }
+ 
+    
 
+    
 }

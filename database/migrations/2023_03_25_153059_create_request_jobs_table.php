@@ -17,6 +17,7 @@ class CreateRequestJobsTable extends Migration
             $table->id();
             $table->unsignedBigInteger('user_id')->nullable();
             $table->unsignedBigInteger('job_id')->nullable();
+            $table->unsignedBigInteger('jobber_id')->nullable();
             $table->unsignedBigInteger('category_id');
             $table->string('title');
             $table->text('description')->nullable();
@@ -31,6 +32,7 @@ class CreateRequestJobsTable extends Migration
         
             // Define foreign key constraints
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('jobber_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('job_id')->references('id')->on('jobs')->onDelete('cascade');
             $table->foreign('category_id')->references('id')->on('categories')->onDelete('cascade');
         });

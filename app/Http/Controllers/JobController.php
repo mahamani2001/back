@@ -6,6 +6,7 @@ use App\Models\Job;
 use App\Models\Offre;
 use App\Models\RequestJob;
 use Illuminate\Http\Request;
+use Tymon\JWTAuth\Facades\JWTAuth;
 
 class JobController extends Controller
 {
@@ -36,6 +37,8 @@ class JobController extends Controller
         $job->price_max = $request->input('price_max');
         $job->price_min = $request->input('price_min');
         $job->pictureUrl = $request->input('pictureUrl');
+        $job->category_id = $request->input('categoryId');
+        $job->jobber_id = $request->input('jobber_id');
         $job->save();
         return response()->json($job, 201);
     }
@@ -59,6 +62,11 @@ class JobController extends Controller
             return response()->json(null, 204);
         }
 
-  
+        public function getJob(Request $request)
+        {
+            $user = JWTAuth::parseToken()->authenticate();
+            $job = Job::where('jobber_id', $user->id)->get();
+            return response()->json(['job' => $job]);
+        }
 
 }

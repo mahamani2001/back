@@ -3,7 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Review;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
+use Tymon\JWTAuth\Facades\JWTAuth;
 
 class ReviewController extends Controller
 {
@@ -33,4 +36,26 @@ class ReviewController extends Controller
        $avis->delete();
        return response("supprimer la demande ",204);
     }
+    public function store(Request $request, $jobber_id)
+    {
+        $user = auth()->user();
+        
+        $review = new Review();
+        $review->user_id = $user->id;
+        $review->jobber_id = $jobber_id;
+        $review->comment = $request->input('comment');
+        $review->rating = $request->input('rating');
+        
+        $review->save();
+        
+        return response()->json(['message' => 'Review posted successfully'], 200);
+    }
+/*
+public function getJobberReview(Request $request)
+{
+    $user = auth()->user(); // get the authenticated user
+    $reviews = Review::where('jobber_id', $user->id)->get();
+    return response()->json(['reviews' => $reviews]);
+}*/
+
 }

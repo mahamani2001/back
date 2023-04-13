@@ -42,7 +42,11 @@ Route::group(['middleware'=>'api'],function($routes){
 });
 
 /*gérer les avis*/
+
+Route::middleware('jwt.auth')->get('reviews', [ReviewController::class,'getJobberReview']);
+Route::post('review/{jobber_id}', [ReviewController::class,'store']);
 Route::post('avis',[ReviewController::class,'addavis']);
+//Route::post('avi',[ReviewController::class,'store']);
 Route::put('avis/{id}',[ReviewController::class,'updateavis']);
 Route::delete('avis/{id}',[ReviewController::class,'deleteavis']);
 Route::get('avis',[ReviewController::class,'getallavis']);
@@ -60,6 +64,15 @@ Route::put('prestataires/{id}', [JobberController::class,'update']);
 Route::delete('prestataires/{id}', [JobberController::class,'destroy']);
 
 
+
+
+
+
+
+
+
+
+Route::middleware('jwt.auth')->get('disponibilite', [DisponibiliteContoller::class, 'getUserAvailability']);
 Route::get('disponibilites',  [DisponibiliteContoller::class,'index']);
 Route::post('disponibilites', [DisponibiliteContoller::class,'store']);
 Route::get('disponibilites/{id}',[DisponibiliteContoller::class,'show']);
@@ -85,12 +98,14 @@ Route::delete('job-requests/{id}',[RequestJobController::class,'deleteRequestJob
 Route::get('search/{title}',[RequestJobController::class,'search']);
 Route::post('requests/{id}/offers', [JobOfferController::class, 'create']);
 //Route::get('/job-request', [RequestJobController::class, 'index']);
-Route::post('/post-requests-to-provider', [RequestJobController::class, 'postRequestsToProvider']);
+Route::post('/provider', [RequestJobController::class, 'postRequestToJobber']);
 Route::get('/client-requests', [RequestJobController::class, 'getClientRequests']);
-Route::get('/providerRequest', [RequestJobController::class, 'getProviderRequests']);
+Route::get('/provider-requests', [YourController::class, 'getProviderRequests']);
 
 //Tache admin
 //Gérer services:
+Route::middleware('jwt.auth')->get('jobs', [JobController::class, 'getJob']);
+
 Route::get('/job', [JobController::class, 'index']);
 Route::get('/job/{job}', [JobController::class, 'show']);
 Route::post('/job', [JobController::class, 'store']);

@@ -15,9 +15,12 @@ class CreateDisponibilitesTable extends Migration
     {
         Schema::create('disponibilites', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('jobber_id')->nullable();
             $table->boolean('actif')->default(true);
-            $table->time('heure');
+            $table->time('heure_debut');
+            $table->time('heure_fin')->nullable();
             $table->enum('jour', ['lundi', 'mardi', 'mercredi', 'jeudi', 'vendredi', 'samedi', 'dimanche']);
+            $table->foreign('jobber_id')->references('id')->on('users')->onDelete('cascade');
             $table->timestamps();
         });
     }

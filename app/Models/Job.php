@@ -14,7 +14,8 @@ class Job extends Model
         'description',
         'price_max',
         'price_min',
-        'pictureUrl'
+        'pictureUrl',
+        'jobber_id'
     ];
  
     public function user()

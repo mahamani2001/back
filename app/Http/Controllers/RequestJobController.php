@@ -5,7 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\Offre;
 use App\Models\RequestJob;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Tymon\JWTAuth\Facades\JWTAuth;
 
 class RequestJobController extends Controller
 {
@@ -14,10 +16,20 @@ class RequestJobController extends Controller
         return response()->json(RequestJob::all(),200);
 
     }
- 
+  //post request to all prestataire
     public function addrequestjob(Request $request){
-        $requestjob=RequestJob::create($request->all());
-
+        $user = JWTAuth::parseToken()->authenticate();
+        $requestjob = new RequestJob();
+        $requestjob->user_id = $user->id;
+        $requestjob->category_id = $request->input('categoryId');
+        $requestjob->title = $request->input('title');
+        $requestjob->description = $request->input('description');
+        $requestjob->start_date = $request->input('start_date');
+        $requestjob->end_date = $request->input('end_date');
+        $requestjob->time = $request->input('time');
+        $requestjob->location = $request->input('location');
+        $requestjob->save();
+       
         return response()->json([
             'success' => true,
             'data' => $requestjob,
@@ -77,8 +89,10 @@ public function getClientRequests(Request $request)
 
 public function getProviderRequests(Request $request)
 {
+    // Get the authenticated user
+    $user = Auth::user();
     // Get the provider ID from the authenticated user
-    $provider_id = auth()->id();
+    $provider_id = $user->id;
 
     // Get the job requests for the authenticated provider
     $jobRequests = RequestJob::with(['user' => function ($query) {
@@ -91,21 +105,29 @@ public function getProviderRequests(Request $request)
 
     return response()->json($jobRequests);
 }
-public function postRequestsToProvider(Request $request)
+public function postRequestToJobber(Request $request)
 {
-    $provider_id = $request->input('provider_id');
-    $user_id = $request->input('user_id');
    
-    $jobRequests = DB::table('request_jobs')
-        ->join('jobs', 'jobs.id', '=', 'request_jobs.job_id')
-        ->join('categories', 'categories.id', '=', 'request_jobs.category_id')
-        ->where('request_jobs.user_id', '=', $user_id)
-        ->join('users', 'request_jobs.user_id', '=', 'users.id')
-        ->where('request_jobs.provider_id', '=', $provider_id) // add provider ID filter
-        ->select('request_jobs.*', 'jobs.title as job_title', 'categories.name as category_name', 'users.firstname as client_firstname')
-        ->get();
-
-    return response()->json($jobRequests);
+        $user = JWTAuth::parseToken()->authenticate();
+        $requestjob = new RequestJob();
+        $requestjob->user_id = $user->id;
+        $requestjob->job_id = $request->input('job_id');
+        $requestjob->jobber_id = $request->input('jobber_id');
+        $requestjob->category_id = $request->input('categoryId');
+        $requestjob->title = $request->input('title');
+        $requestjob->description = $request->input('description');
+        $requestjob->start_date = $request->input('start_date');
+        $requestjob->end_date = $request->input('end_date');
+        $requestjob->time = $request->input('time');
+        $requestjob->location = $request->input('location');
+        $requestjob->save();
+       
+        return response()->json([
+            'success' => true,
+            'data' => $requestjob,
+            'message' => 'Request job created successfully.'
+        ]);
+    
 }
 
 

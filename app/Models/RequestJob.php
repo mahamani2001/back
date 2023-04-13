@@ -11,7 +11,7 @@ class RequestJob extends Model
      
     
    protected $fillable = [
-       'category_id',
+    'category_id',
     'user_id',
     'job_id',
     'title',
@@ -23,7 +23,7 @@ class RequestJob extends Model
     'status',
     'is_client',
     'is_provider',
-    'provider_id'
+    'jobber_id'
 ];
 public function user()
 {

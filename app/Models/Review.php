@@ -13,10 +13,17 @@ class Review extends Model
 
     protected $fillable = [
          'rating',
-         'comment'
+         'comment',
+         'user_id',
+         'jobber_id'
+
     ];
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+    public function jobber()
+    {
+        return $this->belongsTo(User::class, 'jobber_id');
     }
 }
