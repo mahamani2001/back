@@ -40,8 +40,6 @@ class JobController extends Controller
         $job->price_min = $request->input('price_min');
         $job->pictureUrl = $request->input('pictureUrl');
         $job->category_id = $request->input('category_id');
-       
-      
         $job->save();
         return response()->json($job, 201);
     }
@@ -65,7 +63,8 @@ class JobController extends Controller
             $job->delete();
             return response()->json(null, 204);
         }
-
+       /*Le prestataire peut récupérer
+        toutes les demandes qui lui sont adressées dans sa dashboard*/
         public function getJob(Request $request)
         {
             $user = JWTAuth::parseToken()->authenticate();

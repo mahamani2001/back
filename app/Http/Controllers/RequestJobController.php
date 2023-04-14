@@ -121,10 +121,9 @@ public function postRequestToJobber(Request $request)
    
         $user = JWTAuth::parseToken()->authenticate();
         $requestjob = new RequestJob();
-        $requestjob->user_id = $user->id;
-        $requestjob->job_id = $request->input('job_id');
+        $requestjob->user_id = $user->id;     
         $requestjob->jobber_id = $request->input('jobber_id');
-        $requestjob->category_id = $request->input('categoryId');
+        $requestjob->category_id = $request->input('category_id');
         $requestjob->title = $request->input('title');
         $requestjob->description = $request->input('description');
         $requestjob->start_date = $request->input('start_date');
@@ -147,6 +146,24 @@ public function getClientRequest(Request $request)
     $requestjob = RequestJob::where('user_id', $user->id)->get();
     return response()->json(['requestjob' => $requestjob]);
 }
+
+public function getJobberRequest(Request $request)
+{
+    $user = JWTAuth::parseToken()->authenticate();
+
+    $requestJobs = RequestJob::with([
+        'user' => function ($query) {
+            $query->select('id', 'firstname');
+        },
+        'category'
+    ])
+        ->where('jobber_id', $user->id)
+        ->get();
+
+    return response()->json(['requestJobs' => $requestJobs]);
+}
+
+
 
 
 

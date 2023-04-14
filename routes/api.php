@@ -50,12 +50,12 @@ Route::post('jobbers', [JobberController::class,'store']);
 Route::get('jobber', [JobberController::class,'index']);
  
 
-
+Route::get('/RequestJobber', [RequestJobController::class, 'getJobberRequest']);
 
 //dashboard prestataire 
 //get request and respond with offre
 Route::post('requests/{id}/offers', [JobOfferController::class, 'create']);
-Route::get('/provider-requests', [RequestJobController::class, 'getProviderRequests']);
+//Route::get('/provider-requests', [RequestJobController::class, 'getProviderRequests']);
 //Disponibilité
 Route::middleware('jwt.auth')->get('disponibilite', [DisponibiliteContoller::class, 'getUserAvailability']);
 Route::middleware('jwt.auth')->post('disponibilites', [DisponibiliteContoller::class,'store']);
@@ -91,12 +91,15 @@ Route::post('/job', [JobController::class, 'store']);
 Route::put('/job/{job}', [JobController::class, 'update']);
 Route::delete('/job/{job}', [JobController::class, 'destroy']);
 });
-//
+//récupérer les services dans la interface de la plateforme
 Route::get('/job', [JobController::class, 'index']);
+
+
+Route::get('jobs/{id}', [JobController::class, 'get']);
 Route::get('/job/{job}', [JobController::class, 'show']);
 
 //get service avec catégorie
-Route::get('jobs/{id}', [JobController::class, 'get']);
+
 Route::get('/categories', [CategoriesController::class, 'index']);
 Route::get('/categories/{id}', [CategoriesController::class, 'show']);
 Route::post('/categories', [CategoriesController::class, 'store']);
