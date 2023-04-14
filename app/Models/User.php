@@ -19,6 +19,8 @@ class User extends Authenticatable  implements JWTSubject,MustVerifyEmail
      * @var array<int, string>
      */
     protected $fillable = [
+        'user_id',
+        'jobber_id',
         'firstname',
         'email',
         'password',
@@ -95,10 +97,6 @@ public function job()
     return $this->hasMany(Job::class);
 }
 
-public function reviews()
-{
-    return $this->hasMany(Review::class);
-}
 
 //Relation bettween prestataire et service
 public function jobs()
@@ -110,8 +108,15 @@ public function jobs()
     {
         return $this->hasMany(Disponibilite::class);
     }
- 
-    
+    public function category()
+    {
+        return $this->belongsTo(Categories::class);
+    }
+    public function reviews()
+{
+    return $this->hasMany(Review::class,'user_id');
+}
+
 
     
 }

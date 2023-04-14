@@ -15,18 +15,21 @@ class DisponibiliteContoller extends Controller
     }
     public function store(Request $request)
     {
+        $user = JWTAuth::parseToken()->authenticate();
         $validatedData = $request->validate([
             'actif' => 'required|boolean',
             'heure_debut' => 'required|string|regex:/^\d{2}:\d{2}(-\d{2}:\d{2})?$/',
             'heure_fin' => 'string|regex:/^\d{2}:\d{2}$/',
             'jour' => 'required|string',
-            'jobber_id'=>'required|int'
+          
+        
         ]);
         
         $disponibilite = new Disponibilite();
         $disponibilite->actif = $validatedData['actif'];
         $disponibilite->jour = $validatedData['jour'];
-        $disponibilite->jobber_id = $validatedData['jobber_id'];
+        $disponibilite->jobber_id = $user->id;
+     
 
         
         $heures = explode('-', $validatedData['heure_debut']);

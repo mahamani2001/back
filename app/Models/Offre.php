@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Offre extends Model
 {
     use HasFactory;
-    protected $fillable = ['user_id', 'demande_service_id', 'prix', 'statut'];
+    protected $fillable = ['user_id', 'demande_service_id', 'prix', 'statut','jobber_id'];
 //$offres = Offre::where('demande_service_id', $idDemande)->get();
 
     public function user()

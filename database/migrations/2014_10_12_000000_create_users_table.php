@@ -13,6 +13,7 @@ class CreateUsersTable extends Migration
      */
     public function up()
     {
+        if (!Schema::hasTable('users')) {
         Schema::create('users', function (Blueprint $table) {
             $table->id(); 
             $table->string('role'); 
@@ -30,9 +31,11 @@ class CreateUsersTable extends Migration
             $table->string('competence')->nullable();
             $table->string('numero_cin')->nullable();
             $table->string('diplome')->nullable();
+           
             $table->rememberToken();
+           
             $table->timestamps();
-        });
+        });}
     }
 
     /**
@@ -43,5 +46,6 @@ class CreateUsersTable extends Migration
     public function down()
     {
         Schema::dropIfExists('users');
+      
     }
 }

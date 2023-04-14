@@ -31,20 +31,24 @@ class JobController extends Controller
     
     public function store(Request $request)
     {
+        $user = JWTAuth::parseToken()->authenticate();
         $job = new Job();
+        $job->jobber_id = $user->id;
         $job->title = $request->input('title');
         $job->description = $request->input('description');
         $job->price_max = $request->input('price_max');
         $job->price_min = $request->input('price_min');
         $job->pictureUrl = $request->input('pictureUrl');
-        $job->category_id = $request->input('categoryId');
-        $job->jobber_id = $request->input('jobber_id');
+        $job->category_id = $request->input('category_id');
+       
+      
         $job->save();
         return response()->json($job, 201);
     }
 
     public function update(Request $request, $id)
-    {
+    { 
+        $user = JWTAuth::parseToken()->authenticate();
         $job = Job::findOrFail($id);
         $job->title = $request->input('title');
         $job->description = $request->input('description');

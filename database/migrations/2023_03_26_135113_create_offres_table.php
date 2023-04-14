@@ -12,7 +12,7 @@ class CreateOffresTable extends Migration
      * @return void
      */
     public function up()
-    {
+    { if (!Schema::hasTable('offres')) {
         Schema::create('offres', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('user_id');
@@ -21,12 +21,15 @@ class CreateOffresTable extends Migration
             $table->decimal('prix', 10, 2)->nullable(); // Modify the column to allow null values;
             $table->enum('statut', ['accepte', 'refuse', 'en_attente']);
             $table->timestamps();
-        
+           
+                
+           
             // Define foreign key constraints
             $table->foreign('user_id')->references('id')->on('users');
-            $table->foreign('jobber_id')->references('id')->on('jobber_id');
+            $table->foreign('jobber_id')->references('id')->on('users');
             $table->foreign('demande_service_id')->references('id')->on('request_jobs')->onDelete('cascade');
         });
+    }
     }
 
     /**
