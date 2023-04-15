@@ -87,7 +87,7 @@ public function getClientRequests(Request $request)
         ->join('categories', 'categories.id', '=', 'request_jobs.category_id')
         ->join('users', 'users.id', '=', 'request_jobs.user_id')
         ->where('request_jobs.user_id', '=', $user_id)
-        ->select('request_jobs.*', 'jobs.title as job_title', 'categories.name as category_name','users.firstname as user_name','u')
+        ->select('request_jobs.*', 'jobs.title as job_title', 'categories.name as category_name','users.firstname as user_name')
         ->get();
 
     return response()->json($jobRequests);

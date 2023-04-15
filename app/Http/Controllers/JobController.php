@@ -6,15 +6,28 @@ use App\Models\Job;
 use App\Models\Offre;
 use App\Models\RequestJob;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
 class JobController extends Controller
 {
     public function index()
         {
-            $jobs = Job::all();
+          
+            $jobs = Job::with(['user' => function ($query) {
+                $query->select('id', 'firstname');}
+                ,'category'
+               
+            ])->join('categories', 'categories.id', '=', 'jobs.category_id')
+            ->join('users', 'users.id', '=', 'jobs.jobber_id')
+            ->select('jobs.*')
+            ->get();
+                
             return response()->json($jobs);
         }
+            
+          
+        
 
         public function show(Job $job)
         {
