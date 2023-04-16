@@ -53,8 +53,9 @@ Route::get('jobber', [JobberController::class,'index']);
 Route::get('/RequestJobber', [RequestJobController::class, 'getJobberRequest']);
 
 //dashboard prestataire 
-//get request and respond with offre
+//post request and respond with offre
 Route::post('requests/{id}/offers', [JobOfferController::class, 'create']);
+Route::middleware('jwt.auth')->get('/offres',[JobOfferController::class, 'getOffre']);
 //Route::get('/provider-requests', [RequestJobController::class, 'getProviderRequests']);
 //Disponibilité
 Route::middleware('jwt.auth')->get('disponibilite', [DisponibiliteContoller::class, 'getUserAvailability']);
@@ -71,10 +72,10 @@ Route::middleware('jwt.auth')->group(function () {
     Route::get('/client', [RequestJobController::class, 'getClientRequest']);
 });
 
-Route::post('job-requests', [RequestJobController::class, 'addrequestjob']);
+Route::post('/job-requests', [RequestJobController::class, 'addrequestjob']);
 Route::get('job-request',[RequestJobController::class,'getRequestJob']);
 Route::put('job-requests/{id}',[RequestJobController::class,'updaterquestjob']);
-Route::delete('job-requests/{id}',[RequestJobController::class,'deleteRequestJob']);
+Route::delete('job-request/{id}',[RequestJobController::class,'deleteRequestJob']);
 
 //gérer les avis
 //le client post un avis au prestataire 
@@ -83,6 +84,8 @@ Route::post('/jobbers/{jobber_id}/reviews', [ReviewController::class, 'store']);
 Route::get('/jobbers/{id}/reviews', [ReviewController::class, 'getJobberReviews']);
 //get alljobberReview
 Route::get('review',[ReviewController::class,'getallreviews']);
+//get review of jobber unique 
+
 
 //Gérer services dans dashboard prestataire
 Route::middleware('jwt.auth')->group(function () {
@@ -93,8 +96,6 @@ Route::delete('/job/{job}', [JobController::class, 'destroy']);
 });
 //récupérer les services dans la interface de la plateforme
 Route::get('/job', [JobController::class, 'index']);
-
-
 Route::get('jobs/{id}', [JobController::class, 'get']);
 Route::get('/job/{job}', [JobController::class, 'show']);
 

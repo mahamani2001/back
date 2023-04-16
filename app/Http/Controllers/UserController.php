@@ -26,8 +26,7 @@ class UserController extends Controller
             'password'=>'required|String',
             'address'=>'required|string',
             'phone'=>'required|string',
-            //'role'=>'required|string',
-            'role' => 'required|in:client,provider,admin'
+            'role' => 'required|in:client,prestataire,admin'
  
         ]);
 
@@ -36,7 +35,7 @@ class UserController extends Controller
          'lastname'=>$request->lastname,
          'email'=>$request->email,
          'password'=>Hash::make($request->password),
-         'address'=>$request->address,
+         //'address'=>$request->address,
          'phone'=>$request->phone,
          'role'=>$request->role
 
@@ -138,6 +137,8 @@ class UserController extends Controller
             'password' => 'nullable|string|min:6',
             'address' => 'required|string',
             'phone' => 'required|string',
+            
+
         ]);
 
         if ($validator->fails()) {
