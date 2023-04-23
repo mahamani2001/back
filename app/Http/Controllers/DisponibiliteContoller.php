@@ -52,7 +52,7 @@ class DisponibiliteContoller extends Controller
 
     public function show($jobber_id)
     {
-        $disponibilite = Disponibilite::find($jobber_id);
+        $disponibilite = Disponibilite::where('jobber_id',$jobber_id)->get();
         return $disponibilite;
     }
 
@@ -86,5 +86,9 @@ public function getUserAvailability(Request $request)
     $disponibilites = Disponibilite::where('jobber_id', $user->id)->get();
     return response()->json(['disponibilites' => $disponibilites]);
 }
-
+//get jobber review
+public function getUserDisponibilite($jobber_id) {
+    $disponibilites = Disponibilite::where('jobber_id', $jobber_id)->get();
+    return response()->json(['reviews' => $disponibilites], 200);
+}
 }

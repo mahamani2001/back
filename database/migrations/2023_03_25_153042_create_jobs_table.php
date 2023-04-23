@@ -21,7 +21,7 @@ class CreateJobsTable extends Migration
                 $table-> decimal('price_min');
                 $table->boolean('availability')->default(true);
                 $table->string('pictureUrl');
-               $table->unsignedBigInteger('category_id')->nullable(); // add new foreign key column
+                $table->unsignedBigInteger('category_id')->nullable(); // add new foreign key column
                 $table->foreign('category_id')->references('id')->on('categories');
                 $table->unsignedBigInteger('jobber_id')->nullable(); // add new foreign key column
                 $table->foreign('jobber_id')->references('id')->on('users');

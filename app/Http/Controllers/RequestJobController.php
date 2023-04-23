@@ -47,24 +47,41 @@ class RequestJobController extends Controller
     }
    
     // updateRequest
-    public function updaterquestjob(Request $request,$id){
-        $requestjob=RequestJob::find($id);
-       if(is_null($requestjob)){
-     return response()->json(['message'=>'il y a aucune demand'],404);
+    public function updaterquestjob(Request $request, $id)
+    {
+        $this->validate($request, [
+            'title' => 'required',
+            'description' => 'required',
+            'start_date' => 'required',
+            'end_date' => 'required',
+            'location' => 'required',
+            'time' => 'required',
+            'status' => 'required'
+        ]);
+        
+        $requestjob = RequestJob::find($id);
+        
+        $requestjob->title= $request->input('title');
+        $requestjob-> description= $request->input('description');
+        $requestjob-> start_date= $request->input('start_date');
+        $requestjob-> end_date= $request->input('end_date');
+        $requestjob-> time= $request->input('time');
+        $requestjob-> location= $request->input('location');
+        $requestjob-> status= $request->input('status');
+        $requestjob->save();
 
-       }
-       $requestjob->update($request->all());
-       return response($requestjob,200);
+        return response()->json([
+            'message' => 'requestjob updated',
+            'requestjob' => $requestjob
+        ], 200);
     }
     
 public function deleteRequestJob(Request $request,$id){
-    $RequestJob=RequestJob::find($id);
-   if(is_null($RequestJob)){
- return response()->json(['message'=>'il y a aucune demande pour le moment'],404);
-
-   }
-   $RequestJob->delete();
-   return response("supprimer la demande ",204);
+    $requestjob = RequestJob::find($id);
+    $requestjob->delete();
+    return response()->json([
+        'message' => 'requestjob deleted'
+    ], 200);
 }
 
 public function index(Request $request)

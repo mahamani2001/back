@@ -11,27 +11,27 @@ use Tymon\JWTAuth\Facades\JWTAuth;
 
 class JobController extends Controller
 {
-    public function index()
-        {
-          
-            $jobs = Job::with(['user' => function ($query) {
-                $query->select('id', 'firstname');}
-                ,'category'
-               
-            ])->join('categories', 'categories.id', '=', 'jobs.category_id')
+ 
+        public function index(){
+            $jobs=Job::with(['user'=>function($query){
+                $query->select('id', 'firstname');
+            },'category'])
+            ->join('categories', 'categories.id', '=', 'jobs.category_id')
             ->join('users', 'users.id', '=', 'jobs.jobber_id')
-            ->select('jobs.*')
+            ->select('jobs.*','users.firstname as client_firstname')
             ->get();
-                
-            return response()->json($jobs);
+
+             return response()->json($jobs);
+          
         }
-            
+   
           
         
 
-        public function show(Job $job)
-        {
-            return response()->json($job);
+      public function show($jobber_id)
+        {        
+            $jobs = Job::where('jobber_id', $jobber_id)->get();
+            return $jobs;
         }
        public function  get($id){
         $job = Job::with('category')->find($id);
@@ -46,13 +46,14 @@ class JobController extends Controller
     {
         $user = JWTAuth::parseToken()->authenticate();
         $job = new Job();
+        $job->category_id = $request->input('category_id');
         $job->jobber_id = $user->id;
         $job->title = $request->input('title');
         $job->description = $request->input('description');
         $job->price_max = $request->input('price_max');
         $job->price_min = $request->input('price_min');
         $job->pictureUrl = $request->input('pictureUrl');
-        $job->category_id = $request->input('category_id');
+       
         $job->save();
         return response()->json($job, 201);
     }

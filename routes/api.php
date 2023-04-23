@@ -51,11 +51,12 @@ Route::get('jobber', [JobberController::class,'index']);
  
 
 Route::get('/RequestJobber', [RequestJobController::class, 'getJobberRequest']);
-
 //dashboard prestataire 
 //post request and respond with offre
 Route::post('requests/{id}/offers', [JobOfferController::class, 'create']);
 Route::middleware('jwt.auth')->get('/offres',[JobOfferController::class, 'getOffre']);
+
+Route::post('/offres/{offre}/accept',[JobOfferController::class, 'acceptOffer']);
 //Route::get('/provider-requests', [RequestJobController::class, 'getProviderRequests']);
 //Disponibilité
 Route::middleware('jwt.auth')->get('disponibilite', [DisponibiliteContoller::class, 'getUserAvailability']);
@@ -99,6 +100,9 @@ Route::get('/job', [JobController::class, 'index']);
 Route::get('jobs/{id}', [JobController::class, 'get']);
 Route::get('/job/{job}', [JobController::class, 'show']);
 
+
+
+
 //get service avec catégorie
 
 Route::get('/categories', [CategoriesController::class, 'index']);
@@ -119,13 +123,13 @@ Route::delete('/categories/{id}', [CategoriesController::class, 'destroy']);
     Route::delete('/job-offers/{id}', [JobOfferController::class, 'destroy']);
 }.);*/
 //})
-/*
-// get a single Prestataire
+
+
 Route::get('prestataires/{id}', [JobberController::class,'show']);
-// update a Prestataire
+
 Route::put('prestataires/{id}', [JobberController::class,'update']);
 // delete a Prestataire
-Route::delete('prestataires/{id}', [JobberController::class,'destroy']);*/
+Route::delete('prestataires/{id}', [JobberController::class,'destroy']);
 
 
 

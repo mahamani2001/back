@@ -24,7 +24,7 @@ class CreateRequestJobsTable extends Migration
             $table->dateTime('start_date');
             $table->dateTime('end_date');
             $table->string('location');
-            $table->string('time');
+            $table->string('time')->default('9:00 AM');
             $table->enum('status', ['pending', 'completed', 'canceled'])->default('pending');
             $table->boolean('is_client')->default(true);
             $table->boolean('is_provider')->default(false);

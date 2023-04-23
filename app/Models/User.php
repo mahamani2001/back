@@ -117,6 +117,10 @@ public function jobs()
     return $this->hasMany(Review::class,'user_id');
 }
 
+   public function offers()
+{
+    return $this->hasMany(Offre::class,'user_id');
+}
 
     
 }

@@ -35,7 +35,7 @@ class UserController extends Controller
          'lastname'=>$request->lastname,
          'email'=>$request->email,
          'password'=>Hash::make($request->password),
-         //'address'=>$request->address,
+         'address'=>$request->address,
          'phone'=>$request->phone,
          'role'=>$request->role
 

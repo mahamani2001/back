@@ -66,7 +66,6 @@ public function show($id)
     ]);
 }
 
-
         public function destroy($id)
     {
         $prestataire = User::where('id', $id)
