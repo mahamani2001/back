@@ -4,6 +4,7 @@
 use App\Http\Controllers\DisponibiliteContoller;
 use App\Http\Controllers\JobberController;
 use App\Http\Controllers\JobOfferController;
+use App\Http\Controllers\MessageController;
 use App\Http\Controllers\RequestJobController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
@@ -56,7 +57,7 @@ Route::get('/RequestJobber', [RequestJobController::class, 'getJobberRequest']);
 Route::post('requests/{id}/offers', [JobOfferController::class, 'create']);
 Route::middleware('jwt.auth')->get('/offres',[JobOfferController::class, 'getOffre']);
 
-Route::post('/offres/{offre}/accept',[JobOfferController::class, 'acceptOffer']);
+Route::put('offres/{offre}/accepte',[JobOfferController::class, 'accepte'])->name('offres.accept');
 //Route::get('/provider-requests', [RequestJobController::class, 'getProviderRequests']);
 //Disponibilité
 Route::middleware('jwt.auth')->get('disponibilite', [DisponibiliteContoller::class, 'getUserAvailability']);
@@ -100,7 +101,9 @@ Route::get('/job', [JobController::class, 'index']);
 Route::get('jobs/{id}', [JobController::class, 'get']);
 Route::get('/job/{job}', [JobController::class, 'show']);
 
-
+//  Gérer les messages 
+Route::get('/messages', [MessageController::class, 'index']);
+Route::post('/messages', [MessageController::class, 'store']);
 
 
 //get service avec catégorie

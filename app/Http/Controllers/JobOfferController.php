@@ -54,16 +54,25 @@ class JobOfferController extends Controller
 
     }
    
-    public function acceptOffer(Offre $offre)
+    public function accepte(Offre $offer)
     {
-        $offre->statut = 'accepte';
-        $offre->save();
-    
+        // Check if the offer has already been accepted
+        if ($offer->statut === 'accepte') {
+            return response()->json([
+                'message' => 'This offer has already been accepted.'
+            ], 400);
+        }
+        
+        // Update the offer status to 'accepte'
+        $offer->statut = 'accepte';
+        $offer->save();
+        
         return response()->json([
             'message' => 'Offer accepted successfully.',
-            'offer' => $offre,
+            'offer' => $offer,
         ]);
     }
+    
         public function getOffre(Request $request)
 {
     $user = JWTAuth::parseToken()->authenticate();
@@ -72,9 +81,8 @@ class JobOfferController extends Controller
        
        
     ])
-    ->join('users', 'users.id', '=', 'offres.user_id')
-    ->select('offres.*')
-    ->where('user_id', $user->id)
+    ->join('users', 'users.id', '=', 'offres.jobber_id')
+    ->select('offres.*','users.firstname as jobber_firstname')
     ->get();
     return response()->json(['Offre' => $Offre]);
 }

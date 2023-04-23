@@ -14,8 +14,12 @@ class CreateMessagesTable extends Migration
     public function up()
     {
         Schema::create('messages', function (Blueprint $table) {
-            $table->id();
-            $table->timestamps();
+                $table->id();
+                $table->string('name');
+                $table->text('message');
+                $table->string('emoji')->nullable();
+                $table->timestamps();
+            
         });
     }
 
