@@ -57,7 +57,7 @@ Route::get('/RequestJobber', [RequestJobController::class, 'getJobberRequest']);
 Route::post('requests/{id}/offers', [JobOfferController::class, 'create']);
 Route::middleware('jwt.auth')->get('/offres',[JobOfferController::class, 'getOffre']);
 
-Route::put('offres/{offre}/accepte',[JobOfferController::class, 'accepte'])->name('offres.accept');
+Route::put('offres/{id}/accepte',[JobOfferController::class, 'accepte']);
 //Route::get('/provider-requests', [RequestJobController::class, 'getProviderRequests']);
 //Disponibilité
 Route::middleware('jwt.auth')->get('disponibilite', [DisponibiliteContoller::class, 'getUserAvailability']);

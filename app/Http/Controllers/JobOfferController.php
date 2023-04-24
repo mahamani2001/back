@@ -54,8 +54,9 @@ class JobOfferController extends Controller
 
     }
    
-    public function accepte(Offre $offer)
+    public function accepte(int $id)
     {
+        $offer = Offre::find($id);
         // Check if the offer has already been accepted
         if ($offer->statut === 'accepte') {
             return response()->json([
