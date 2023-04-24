@@ -77,7 +77,7 @@ Route::middleware('jwt.auth')->group(function () {
 Route::post('/job-requests', [RequestJobController::class, 'addrequestjob']);
 Route::get('job-request',[RequestJobController::class,'getRequestJob']);
 Route::put('job-requests/{id}',[RequestJobController::class,'updaterquestjob']);
-Route::delete('job-request/{id}',[RequestJobController::class,'deleteRequestJob']);
+Route::delete('job-requests/{id}',[RequestJobController::class,'deleteRequestJob']);
 
 //gérer les avis
 //le client post un avis au prestataire 

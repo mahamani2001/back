@@ -22,7 +22,7 @@ class CreateJobsTable extends Migration
                 $table->boolean('availability')->default(true);
                 $table->string('pictureUrl');
                 $table->unsignedBigInteger('category_id')->nullable(); // add new foreign key column
-                $table->foreign('category_id')->references('id')->on('categories');
+                $table->foreign('category_id')->references('id')->on('categories')->onDelete('cascade');;
                 $table->unsignedBigInteger('jobber_id')->nullable(); // add new foreign key column
                 $table->foreign('jobber_id')->references('id')->on('users');
                 $table->timestamps();    

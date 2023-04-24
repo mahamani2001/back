@@ -20,7 +20,7 @@ has many requests
 has many services
  
     */ 
-    public function job()
+    public function jobs()
     {
         return $this->hasMany(Job::class);
     }
