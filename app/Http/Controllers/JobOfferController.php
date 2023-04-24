@@ -71,7 +71,7 @@ class JobOfferController extends Controller
         return response()->json([
             'message' => 'Offer accepted successfully.',
             'offer' => $offer,
-        ]);
+        ], 200);
     }
     
         public function getOffre(Request $request)
