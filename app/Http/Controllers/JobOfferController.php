@@ -87,6 +87,18 @@ class JobOfferController extends Controller
     ->get();
     return response()->json(['Offre' => $Offre]);
 }
+public function getOffreByDemande($demandeId)
+   {
+    $user = JWTAuth::parseToken()->authenticate();
+    $Offre = Offre::with(['user' => function ($query) {
+        $query->select('id', 'firstname');}  
+    ])
+    ->join('users', 'users.id', '=', 'offres.jobber_id')
+    ->where('offres.demande_service_id', '=', $demandeId)
+    ->select('offres.*','users.firstname as jobber_firstname')
+    ->get();
+    return response()->json(['Offre' => $Offre]);
+}
 
 
 

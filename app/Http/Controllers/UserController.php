@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\PasswordRest;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
@@ -49,11 +51,7 @@ class UserController extends Controller
            'success' => true,
            'user' => $user,
            'token' => $token
-       ], 201);
-      
-
-    
-      
+       ], 201);    
     }
 
     //login api method call
@@ -93,8 +91,6 @@ class UserController extends Controller
         ;
             
     }
-    
-    
     //logout Api method
     public function logout(){
         try{
@@ -137,8 +133,6 @@ class UserController extends Controller
             'password' => 'nullable|string|min:6',
             'address' => 'required|string',
             'phone' => 'required|string',
-            
-
         ]);
 
         if ($validator->fails()) {
@@ -167,10 +161,49 @@ class UserController extends Controller
             'message' => 'Utilisateur non authentifié'
         ], 401);
     }
+    
 }
- /*
+public function index()
+{
+    $users = User::all();
+
+    // Loop through each user and modify their attributes based on role
+    foreach ($users as $user) {
+        if ($user->role == 'prestataire') {
+           
+        } else if ($user->role == 'client') {
+            $user->competence = $user->jobber->competence ?? null;
+            $user->numero_cin = $user->jobber->numero_cin ?? null;
+        }
+    }
+
+    return response()->json($users, 200);
+}
+
+
+public function destroy(User $user)
+{
+    $user->delete();
+    return response()->json(['message' => 'User deleted successfully']);
+}
+
+public function store(Request $request)
+{
+    $user = new User();
+    $user->lastname = $request->lastname;
+    $user->firstname = $request->firstname;
+    $user->role = $request->role;
+    $user->email = $request->email;
+    $user->address = $request->address;
+    $user->phone = $request->phone;
+    $user->password = '123456789'; 
+    $user->save();
+
+    return response()->json(['status' => 'success', 'message' => 'User created successfully']);
+}
+
  //Ce code vérifie si l'utilisateur est authentifié en utilisant auth()->user(). 
- Si l'utilisateur n'est pas authentifié, il renvoie une réponse JSON avec un message d'erreur.
+ /*Si l'utilisateur n'est pas authentifié, il renvoie une réponse JSON avec un message d'erreur.
 
 Ensuite, le code valide les données de la requête en utilisant le validateur de Laravel et en spécifiant les règles 
 de validation pour chaque champ. Si la validation échoue, il renvoie une réponse JSON avec les erreurs de validation.
@@ -179,7 +212,7 @@ Si la validation réussit, le code met à jour le profil de l'utilisateur en uti
         /*
     //create email verification Api
     //use SMTP for send email
-    //Routes setup for email verfication 
+    //Routes setup for email verfication*/
     public function  sendVerifyMail($email){
       if(auth()->user()){
          $user=User::Where('email',$email)->get();
@@ -270,29 +303,66 @@ Si la validation réussit, le code met à jour le profil de l'utilisateur en uti
         } catch(\Exception $e) {
             return response()->json(['success'=>false,'msg'=>$e->getMessage()]);
         }
+    }//reset password view load
+    public function resetPasswordLoad(Request $request)
+    {
+        $restData = PasswordRest::where('token', $request->token)->first();
+    
+        if (!isset($restData)) {
+            return response()->json([
+                'message' => 'Invalid token',
+            ], 400);
+        }
+    
+        $user = User::where('email', $restData->email)->first();
+    
+        if (!isset($user)) {
+            return response()->json([
+                'message' => 'User not found',
+            ], 404);
+        }
+    
+        return response()->json([
+            'currentPassword' => $user->password,
+            'message' => 'Password retrieved successfully',
+        ], 200);
     }
-//reset password  view load
-public function resetPasswordLoad(Request $request)
-{
-    $restData=PasswordRest::where('token',$request->token)->get();
-    if(isset($request->token) && count($restData) >0){
-         $user=User::where('email',$restData[0]['email']->get());
-         return view('resetPassword',compact('user'));
-    }else{
-       return view(404);
-    }
-}
-public function resetPassword(Request $request)
-{
-   $request->validate([
-    'password'=>'required|string|min:6|confirmed'
-   ]);
-   $user=User::find($request->id);
-   $user->password=Hash::make($request->password);
-   $user->save();
-   PasswordRest::Where('email',$user->email)->delete();
-   return "<h1> Your password has been reset successfully . </h1>";
+    
 
+public function reset(Request $request)
+{
+    // Check if the user is authenticated
+    if (!Auth::check()) {
+        return response()->json(['error' => 'User not authenticated'], 401);
+    }
+
+    $user = Auth::user();
+    if (!$user) {
+        return response()->json(['error' => 'User not found'], 404);
+    }
+
+    $currentPassword = $request->input('currentPassword');
+    $newPassword = $request->input('newPassword');
+    $confirmPassword = $request->input('confirmPassword');
+
+    // Validate the input
+    $request->validate([
+        'currentPassword' => 'required',
+        'newPassword' => 'required|min:8|different:currentPassword|same:confirmPassword',
+        'confirmPassword' => 'required',
+    ]);
+
+    // Check if the current password matches
+    if (!Hash::check($currentPassword, $user->password)) {
+        return response()->json(['error' => 'Current password does not match'], 400);
+    }
+
+    // Update the user's password
+    $user->password = Hash::make($newPassword);
+    $user->save();
+
+    return response()->json(['message' => 'Password reset successful'], 200);
 }
-*/
+
+
 }

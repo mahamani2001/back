@@ -40,9 +40,14 @@ Route::group(['middleware'=>'api'],function($routes){
     Route::put('/profile-update',[UserController::class,'updateProfile']);
    // Route::get('/send-verify-mail//{email}',[UserController::class,'sendVerifyMail']);
     Route::get('/refresh-token',[UserController::class,'refreshToken']);   
-
+ 
+    
 });
-
+Route::post('/reset-password', [UserController::class, 'reset']);
+Route::get('/reset-password/{token}', [UserController::class, 'resetPasswordLoad']);
+Route::get('/alluser',[UserController::class,'index']);
+Route::delete('/users/{user}', [UserController::class,'destroy']);
+Route::post('/users',  [UserController::class,'store']);
 
 
 //register prestataire

@@ -33,22 +33,21 @@ class User extends Authenticatable  implements JWTSubject,MustVerifyEmail
         'diplome',
         'role',
     ];
-    public function Jobber()
-    {
-        if ($this->role === 'prestataire') {
-            return $this->hasOne(Jobber::class);
-        }
-        return null;
-    }
-    public function client()
+    public function getClientAttributesAttribute()
     {
         if ($this->role === 'client') {
-            return $this->hasOne(Client::class);
+            return $this->attributes;
         }
         return null;
     }
 
-    
+    public function getPrestataireAttributesAttribute()
+    {
+        if ($this->role === 'prestataire') {
+            return $this->attributes;
+        }
+        return null;
+    }
 
     /**
      * The attributes that should be hidden for serialization.
