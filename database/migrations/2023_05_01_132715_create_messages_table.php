@@ -14,13 +14,16 @@ class CreateMessagesTable extends Migration
     public function up()
     {
         Schema::create('messages', function (Blueprint $table) {
-                $table->id();
-                $table->string('name');
-                $table->text('message');
-                $table->string('emoji')->nullable();
-                $table->timestamps();
-            
+            $table->id();
+            $table->unsignedBigInteger('user_id');
+            $table->unsignedBigInteger('jobber_id');
+            $table->text('text_message');
+            $table->boolean('vu_message')->default(false);
+            $table->timestamps();
+            $table->foreign('user_id')->references('id')->on('users');
+            $table->foreign('jobber_id')->references('id')->on('users');
         });
+        
     }
 
     /**

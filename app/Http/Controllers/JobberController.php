@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Http;
 
 class JobberController extends Controller
 {
@@ -100,4 +101,50 @@ public function show($id)
         'data' => $prestataire
     ], 200);
     }
+
+
+    //localisation 
+  
+    public function findServiceProviders(Request $request)
+    {
+        // get user location information from the request
+        $latitude = $request->input('latitude');
+        $longitude = $request->input('longitude');
+    
+        // set the search radius to 5km
+        $radius = 5;
+    
+        // get all service providers within the search radius
+        $serviceProviders = User::where('role', 'prestataire')->withinRadius($latitude, $longitude, $radius)->get();
+    
+        // call Thunderforest API to get the distance and duration to each service provider
+        $baseUrl = 'https://tile.thunderforest.com';
+        $apiKey = '42b14628e94940fb8ef24ededa5153e1';
+        foreach ($serviceProviders as $provider) {
+            $url = "$baseUrl/transportation/$longitude,$latitude;{$provider->longitude},{$provider->latitude}.json?key=$apiKey";
+            $response = Http::get($url);
+            $data = $response->json();
+        
+            if (isset($data['routes']) && count($data['routes']) > 0) {
+                $route = $data['routes'][0];
+                if (isset($route['distance']) && isset($route['duration'])) {
+                    $distance = $route['distance'];
+                    $duration = $route['duration'];
+                    $provider->distance = $distance;
+                    $provider->duration = $duration;
+                } else {
+                    // handle the case where distance or duration is not set
+                }
+            } else {
+                // handle the case where routes is not set or has no elements
+            }
+        }
+        
+        // sort service providers by distance
+        $serviceProviders = $serviceProviders->sortBy('distance');
+    
+        // return the closest service providers along with distance and duration
+        return response()->json(['service_providers' => $serviceProviders]);
+    }
+    
 }

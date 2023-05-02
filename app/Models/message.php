@@ -8,10 +8,16 @@ use Illuminate\Database\Eloquent\Model;
 class Message extends Model
 {
     use HasFactory;
-    protected $fillable = [
-        'name',
-        'message',
-        'emoji',
-    ];
+    protected $fillable = ['user_id','jobber_id','text_message','vu_message'];
+   
+   
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 
+    public function jobber()
+    {
+        return $this->belongsTo(User::class, 'jobber_id');
+    }
 }

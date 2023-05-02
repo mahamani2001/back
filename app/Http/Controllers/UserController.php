@@ -196,7 +196,7 @@ public function store(Request $request)
     $user->email = $request->email;
     $user->address = $request->address;
     $user->phone = $request->phone;
-    $user->password = '123456789'; 
+    $user->password = ''; 
     $user->save();
 
     return response()->json(['status' => 'success', 'message' => 'User created successfully']);

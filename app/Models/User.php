@@ -18,6 +18,19 @@ class User extends Authenticatable  implements JWTSubject,MustVerifyEmail
      *
      * @var array<int, string>
      */
+    // ...
+
+    /**
+     * Scope a query to only include users within a given radius from the given latitude and longitude.
+     *
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param float $latitude The latitude value to use as the center of the search radius
+     * @param float $longitude The longitude value to use as the center of the search radius
+     * @param int $radius The search radius in kilometers
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+   
+    
     protected $fillable = [
         'user_id',
         'jobber_id',
@@ -32,7 +45,23 @@ class User extends Authenticatable  implements JWTSubject,MustVerifyEmail
         'numero_cin',
         'diplome',
         'role',
+       'latitude',
+       'longitude'
     ];
+    public function scopeWithinRadius($query, $latitude, $longitude, $radius)
+    {
+        // calculate the haversine formula parameters
+        $haversine = "(6371 * acos(cos(radians($latitude)) * cos(radians(latitude)) * cos(radians(longitude) - radians($longitude)) + sin(radians($latitude)) * sin(radians(latitude))))";
+    
+        // add a select clause to the query to get the calculated distance
+        $query->selectRaw("*, $haversine AS distance");
+    
+        // add a where clause to filter by distance
+        $query->whereRaw("$haversine < ?", [$radius]);
+    
+        // return the query builder instance
+        return $query;
+    }
     public function getClientAttributesAttribute()
     {
         if ($this->role === 'client') {
@@ -119,6 +148,15 @@ public function jobs()
    public function offers()
 {
     return $this->hasMany(Offre::class,'user_id');
+}
+public function sentMessages()
+{
+    return $this->hasMany(Message::class, 'user_id');
+}
+
+public function receivedMessages()
+{
+    return $this->hasMany(Message::class, 'jobber_id');
 }
 
     

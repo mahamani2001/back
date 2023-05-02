@@ -32,6 +32,7 @@ class CreateUsersTable extends Migration
             $table->string('numero_cin')->nullable();
             $table->string('diplome')->nullable();
            
+           
             $table->rememberToken();
            
             $table->timestamps();
