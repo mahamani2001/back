@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Message;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
@@ -19,25 +20,34 @@ class MessageController extends Controller
 
         return response()->json(['message' => 'Message sent successfully'], 200);
     }
-    public function sendToJobber(Request $request)
+    public function sendToJobber(Request $request,$jobber_id)
     {
+        $client = auth()->user();
+        if ($client->role !== 'client') {
+            return response()->json(['message' => 'Unauthorized'], 401);
+        }
+    
+        // Check if the jobber exists
+        $jobber = User::find($jobber_id);
+        if (!$jobber) {
+            return response()->json(['message' => 'jobber not found'], 404);
+        }
         $validatedData = $request->validate([
-            'jobber_id' => 'required|exists:users,id',
             'text_message' => 'required',
-            'vu' => 'boolean'
+            'vu_message' => 'boolean'
         ]);
         $message = new Message();
-        $message->user_id = auth()->user()->id;
-        $message->jobber_id = $validatedData['jobber_id'];
+        $message->user_id = $client->id;
+        $message->jobber_id = $jobber->id;
         $message->text_message = $validatedData['text_message'];
-        $message->vu_message = $validatedData['vu'] ?? false; // set default to false if not provided
+        $message->vu_message = $validatedData['vu_message'] ?? false; // set default to false if not provided
         $message->save();
         return response()->json([
             'status' => 'success',
             'message' => 'Message sent successfully!'
         ]);
     }
-    public function sendToClient(Request $request)
+        public function sendToClient(Request $request)
     {
         $validatedData = $request->validate([
             'user_id' => 'required|exists:users,id',

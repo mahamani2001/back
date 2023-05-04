@@ -79,10 +79,9 @@ Route::middleware('jwt.auth')->group(function () {
     Route::post('/post-to-jobber', [RequestJobController::class, 'postRequestToJobber']);
     Route::get('/client', [RequestJobController::class, 'getClientRequest']);
 });
-
+Route::put('job-reques/{id}',[RequestJobController::class,'updaterquestjob']);
 Route::post('/job-requests', [RequestJobController::class, 'addrequestjob']);
 Route::get('job-request',[RequestJobController::class,'getRequestJob']);
-Route::put('job-requests/{id}',[RequestJobController::class,'updaterquestjob']);
 Route::delete('job-requests/{id}',[RequestJobController::class,'deleteRequestJob']);
 
 //gérer les avis
@@ -113,19 +112,20 @@ Route::post('/messages', [MessageController::class, 'store']);
 
 Route::middleware('auth:api')->group(function () {
     Route::get('/messages', [MessageController::class, 'index']);
-    Route::post('/messages', [MessageController::class, 'sendToJobber']);
     Route::post('/messages', [MessageController::class, 'sendToClient']);
     Route::get('/messages', [MessageController::class, 'jobbermessage']);
+    Route::post('/messages/{jobber_id}', [MessageController::class, 'sendToJobber']);
 });
 //get service avec catégorie
 
 Route::get('/categories', [CategoriesController::class, 'index']);
 Route::get('/categories/{id}', [CategoriesController::class, 'show']);
-Route::post('/categories', [CategoriesController::class, 'store']);
 
+Route::middleware('auth:api')->group(function () {
+Route::post('/categories', [CategoriesController::class, 'store']);
 Route::delete('/categories/{id}', [CategoriesController::class, 'destroy']);
 Route::put('/categorie/{id}', [CategoriesController::class, 'update']);
-
+});
 
 //Route::group(['middleware' => ['jwt.verify']], function () {
     //job_request api 
@@ -147,9 +147,3 @@ Route::delete('prestataires/{id}', [JobberController::class,'destroy']);
 
 
 Route::get('/location',[JobberController::class,'findServiceProviders']);
-
-
-
-
-
-

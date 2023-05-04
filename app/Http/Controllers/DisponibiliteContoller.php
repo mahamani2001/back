@@ -60,10 +60,10 @@ class DisponibiliteContoller extends Controller
     {
         $disponibilite = Disponibilite::find($id);
         $disponibilite->actif = $request->input('actif');
-        $disponibilite->heure = $request->input('heure');
+        $disponibilite->heure_debut = $request->input('heure_debut');
+        $disponibilite->heure_fin = $request->input('heure_fin');
         $disponibilite->jour = $request->input('jour');
         $disponibilite->save();
-
         return response()->json([
             'message' => 'Disponibilite updated',
             'disponibilite' => $disponibilite

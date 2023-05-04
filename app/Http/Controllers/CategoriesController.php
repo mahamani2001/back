@@ -21,14 +21,13 @@ class CategoriesController extends Controller
         'name' => 'required|string|max:255',
         'image' => 'required|image|max:2048',
     ]);
-
     if ($validator->fails()) {
         return response()->json(['errors' => $validator->errors()], 422);
     }
 
     $file = $request->file('image');
     $filename = time() . '_' . $file->getClientOriginalName();
-    $path = $file->storeAs('public/images', $filename);
+    $path = $file->storeAs('.\public\images', $filename);
 
     $category = new Categories();
     $category->name = $request->input('name');
@@ -98,6 +97,7 @@ public function update(Request $request, $id)
     // return success response
     return response()->json(['success' => true, 'category' => $category]);
 }
+
 
     
 }

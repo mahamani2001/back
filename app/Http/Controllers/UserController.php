@@ -28,7 +28,8 @@ class UserController extends Controller
             'password'=>'required|String',
             'address'=>'required|string',
             'phone'=>'required|string',
-            'role' => 'required|in:client,prestataire,admin'
+            'role' => 'required|in:client,prestataire,admin',
+            
  
         ]);
 
@@ -162,44 +163,6 @@ class UserController extends Controller
         ], 401);
     }
     
-}
-public function index()
-{
-    $users = User::all();
-
-    // Loop through each user and modify their attributes based on role
-    foreach ($users as $user) {
-        if ($user->role == 'prestataire') {
-           
-        } else if ($user->role == 'client') {
-            $user->competence = $user->jobber->competence ?? null;
-            $user->numero_cin = $user->jobber->numero_cin ?? null;
-        }
-    }
-
-    return response()->json($users, 200);
-}
-
-
-public function destroy(User $user)
-{
-    $user->delete();
-    return response()->json(['message' => 'User deleted successfully']);
-}
-
-public function store(Request $request)
-{
-    $user = new User();
-    $user->lastname = $request->lastname;
-    $user->firstname = $request->firstname;
-    $user->role = $request->role;
-    $user->email = $request->email;
-    $user->address = $request->address;
-    $user->phone = $request->phone;
-    $user->password = ''; 
-    $user->save();
-
-    return response()->json(['status' => 'success', 'message' => 'User created successfully']);
 }
 
  //Ce code vérifie si l'utilisateur est authentifié en utilisant auth()->user(). 
@@ -365,4 +328,58 @@ public function reset(Request $request)
 }
 
 
+public function index()
+{
+    $users = User::all();
+
+    // Loop through each user and modify their attributes based on role
+    foreach ($users as $user) {
+        if ($user->role == 'prestataire') {
+           
+        } else if ($user->role == 'client') {
+            $user->competence = $user->jobber->competence ?? null;
+            $user->numero_cin = $user->jobber->numero_cin ?? null;
+        }
+    }
+
+    return response()->json($users, 200);
+}
+
+
+public function destroy(User $user)
+{
+    $user->delete();
+    return response()->json(['message' => 'User deleted successfully']);
+}
+
+public function store(Request $request)
+{
+    $user = new User();
+    $user->lastname = $request->lastname;
+    $user->firstname = $request->firstname;
+    $user->role = $request->role;
+    $user->email = $request->email;
+    $user->address = $request->address;
+    $user->phone = $request->phone;
+    $user->password = Hash::make($request->password);
+    $user->save();
+
+    return response()->json(['status' => 'success', 'message' => 'User created successfully']);
+}
+public function update(Request $request, $id)
+{
+    $user = User::find($id);
+    $user->lastname = $request->lastname;
+    $user->firstname = $request->firstname;
+    $user->role = $request->role;
+    $user->email = $request->email;
+    $user->address = $request->address;
+    $user->phone = $request->phone;
+    $user->password = Hash::make($request->password);
+    $user->save();
+    return response()->json([
+        'message' => 'user updated',
+        'user' => $user
+    ], 200);
+}
 }

@@ -29,12 +29,16 @@ class JobberController extends Controller
                 'password' => 'required|min:6',
                 'phone'=>'required|string',
                 'address' => 'required|string',
-                'photo' => 'nullable',
                 'competence' => 'nullable',
                 'numero_cin' => 'nullable',
                 'diplome' => 'nullable',
+                'photo' => 'required|image|max:2048',
             ]);
-        
+
+            $file = $request->file('photo');
+            $filename = time() . '_' . $file->getClientOriginalName();
+            $path = $file->storeAs('.\public\images', $filename);
+       
             $prestataire = new User;
             $prestataire->lastname = $validatedData['lastname'];
             $prestataire->firstname = $validatedData['firstname'];
@@ -42,10 +46,10 @@ class JobberController extends Controller
             $prestataire->phone = $validatedData['phone'];
             $prestataire->address = $validatedData['address'];
             $prestataire->password = bcrypt($validatedData['password']);
-            $prestataire->photo = $validatedData['photo'];
             $prestataire->competence = $validatedData['competence'];
             $prestataire->numero_cin = $validatedData['numero_cin'];
             $prestataire->diplome = $validatedData['diplome'];
+            $prestataire->photo = $filename;
             $prestataire->role = 'prestataire';
             $prestataire->save();
         
