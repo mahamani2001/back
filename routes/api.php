@@ -49,7 +49,7 @@ Route::get('/alluser',[UserController::class,'index']);
 Route::delete('/users/{user}', [UserController::class,'destroy']);
 Route::post('/users',  [UserController::class,'store']);
 
-
+Route::get(' ',[UserController::class,'getpassword']);
 //register prestataire
 Route::post('jobbers', [JobberController::class,'store']);
  // get all jobbers 
@@ -147,3 +147,4 @@ Route::delete('prestataires/{id}', [JobberController::class,'destroy']);
 
 
 Route::get('/location',[JobberController::class,'findServiceProviders']);
+Route::get('prestataires/nearby', [PrestataireController::class, 'getPrestatairesNearby']);

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 
 class JobberController extends Controller
@@ -150,5 +151,31 @@ public function show($id)
         // return the closest service providers along with distance and duration
         return response()->json(['service_providers' => $serviceProviders]);
     }
+    public function getPrestatairesNearby(Request $request)
+    {
+        $latitude = $request->input('latitude');
+        $longitude = $request->input('longitude');
+        $distance = $request->input('distance');
+
+        // Use your preferred method to query the database for prestataires within the specified distance
+        // Here's an example using the Haversine formula:
+        $prestataires = User::select('users.*')
+            ->selectRaw('( 6371 * acos( cos( radians(?) ) *
+                cos( radians( latitude ) )
+                * cos( radians( longitude ) - radians(?)
+                ) + sin( radians(?) ) *
+                sin( radians( latitude ) ) )
+                ) AS distance', [$latitude, $longitude, $latitude])
+            ->whereHas('roles', function ($query) {
+                $query->where('name', 'prestataire');
+            })
+            ->having('distance', '<=', $distance)
+            ->orderBy('distance')
+            ->get();
+
+        return response()->json($prestataires);
+    
+    }
+
     
 }

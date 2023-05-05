@@ -122,6 +122,18 @@ class UserController extends Controller
          ]);
       }
 }
+public function getpassword(){
+    $user = auth()->user();// récupérer l'utilisateur actuellement authentifié
+    try{
+        return response()->json(['success'=>true,'data'=>$user->password]);//retourne ensuite le mot de passe de l'utilisateur dans une réponse JSON avec un indicateur de succès.
+    }
+    catch (\Exception $e){
+         return response()->json([
+            'success'=>false,
+            'msg'=>$e->getMessage()
+         ]);
+    }
+}
  //Profile update and check user is authanticated or not
  public function updateProfile(Request $request)
 {
